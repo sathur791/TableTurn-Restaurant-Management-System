@@ -1,0 +1,539 @@
+/* ==========================================================================
+   TableTurn — Restaurant Dining & Management Theme
+   ========================================================================== */
+
+:root {
+  /* Warm Restaurant Palette */
+  --bg-dark: #0e141b;
+  --bg-card: #151d26;
+  --bg-card-hover: #1c2633;
+  --bg-input: #0b1016;
+  --line: #243140;
+  --line-light: #2e3e52;
+
+  /* Dining Accents */
+  --gold: #e5a950;
+  --gold-subtle: rgba(229, 169, 80, 0.12);
+  --gold-glow: rgba(229, 169, 80, 0.25);
+  
+  --free: #2ebd85;
+  --free-bg: rgba(46, 189, 133, 0.12);
+  --free-border: rgba(46, 189, 133, 0.3);
+
+  --busy: #db4d3f;
+  --busy-bg: rgba(219, 77, 63, 0.12);
+  --busy-border: rgba(219, 77, 63, 0.3);
+
+  --book: #e5a950;
+  --book-bg: rgba(229, 169, 80, 0.12);
+  --book-border: rgba(229, 169, 80, 0.3);
+
+  --seated: #4fa3d1;
+  --seated-bg: rgba(79, 163, 209, 0.12);
+
+  --ink: #f2f5f8;
+  --ink-secondary: #9cb0c2;
+  --muted: #6b7f94;
+
+  --radius-card: 14px;
+  --radius-btn: 9px;
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-dark);
+  color: var(--ink);
+  font-family: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==================== Header ==================== */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--line);
+  background: #111822;
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h1::before {
+  content: "🍽️";
+  font-size: 1.45rem;
+  display: inline-block;
+  filter: drop-shadow(0 2px 8px rgba(229, 169, 80, 0.3));
+}
+
+h1 small {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ==================== Navigation Tabs ==================== */
+nav {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-input);
+  padding: 5px;
+  border-radius: var(--radius-btn);
+  border: 1px solid var(--line);
+}
+
+nav button {
+  border: 1px solid transparent;
+  background: none;
+  padding: 8px 18px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 180ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+nav button:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+nav button.on {
+  color: var(--gold);
+  background: var(--gold-subtle);
+  border-color: rgba(229, 169, 80, 0.28);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+nav button[data-tab="floor"]::before { content: "▦"; }
+nav button[data-tab="res"]::before { content: "▣"; }
+nav button[data-tab="ord"]::before { content: "🧾"; }
+
+/* ==================== Layout & Tabs ==================== */
+main {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+}
+
+section:not(.on) {
+  display: none !important;
+}
+
+section.on {
+  display: block;
+  animation: tabFadeIn 200ms ease-out;
+}
+
+section.stack.on {
+  display: grid;
+  gap: 22px;
+  animation: tabFadeIn 200ms ease-out;
+}
+
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  margin: 0 0 16px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==================== Cards ==================== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 22px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ==================== Floor: Table Cards ==================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.table {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--free);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.table:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--line-light);
+}
+
+.table.OCCUPIED {
+  border-left-color: var(--busy);
+}
+
+.table .no {
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.table.FREE .no::after {
+  content: "🍽️";
+  font-size: 1.2rem;
+  opacity: 0.65;
+}
+
+.table.OCCUPIED .no::after {
+  content: "👥";
+  font-size: 1.2rem;
+  opacity: 0.85;
+}
+
+.table .muted {
+  font-size: 0.88rem;
+  color: var(--ink-secondary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table .muted::before {
+  content: "🪑";
+  font-size: 0.95rem;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 99px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: fit-content;
+}
+
+.badge.FREE {
+  background: var(--free-bg);
+  color: var(--free);
+  border: 1px solid var(--free-border);
+}
+
+.badge.OCCUPIED, .badge.CANCELLED {
+  background: var(--busy-bg);
+  color: var(--busy);
+  border: 1px solid var(--busy-border);
+}
+
+.badge.BOOKED {
+  background: var(--book-bg);
+  color: var(--gold);
+  border: 1px solid var(--book-border);
+}
+
+.badge.SEATED {
+  background: var(--seated-bg);
+  color: var(--seated);
+  border: 1px solid rgba(79, 163, 209, 0.3);
+}
+
+.badge.COMPLETED {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+
+/* Actions Row */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ==================== Buttons ==================== */
+button.b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-btn);
+  border: 1px solid var(--gold);
+  background: var(--gold);
+  color: #120e06;
+  cursor: pointer;
+  transition: all 160ms ease;
+  text-decoration: none;
+}
+
+button.b:hover {
+  background: #f0b763;
+  border-color: #f0b763;
+  box-shadow: 0 3px 12px var(--gold-glow);
+}
+
+button.b:active {
+  transform: scale(0.98);
+}
+
+button.b.alt {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+button.b.alt:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--line-light);
+  box-shadow: none;
+}
+
+button.b.warn {
+  background: var(--busy-bg);
+  color: var(--busy);
+  border-color: var(--busy-border);
+}
+
+button.b.warn:hover {
+  background: rgba(219, 77, 63, 0.22);
+  border-color: var(--busy);
+  box-shadow: 0 3px 12px rgba(219, 77, 63, 0.25);
+}
+
+button.b:focus-visible, input:focus-visible, select:focus-visible, nav button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ==================== Forms & Inputs ==================== */
+form, .two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  gap: 6px;
+}
+
+input, select {
+  font: inherit;
+  font-size: 0.92rem;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-btn);
+  background: var(--bg-input);
+  color: var(--ink);
+  height: 44px;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+input:focus, select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-subtle);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.85);
+  cursor: pointer;
+}
+
+/* ==================== Tables ==================== */
+table.t {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.t th, .t td {
+  text-align: left;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.t th {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.t td.r, .t th.r {
+  text-align: right;
+}
+
+.t tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ==================== Restaurant Menu Section ==================== */
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.menu button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg-input) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--ink) !important;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.menu button:hover {
+  border-color: var(--gold) !important;
+  background: var(--bg-card-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ==================== Dining Bill / Receipt Card ==================== */
+#billCard {
+  background: #111720;
+  border: 1px solid rgba(229, 169, 80, 0.35);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+  padding: 24px;
+}
+
+#billCard h2 {
+  color: var(--gold);
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 12px;
+}
+
+#billCard .total {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--gold);
+  margin: 16px 0 18px;
+  padding-top: 12px;
+  border-top: 2px solid var(--line);
+}
+
+/* ==================== Toast Notifications ==================== */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 90vw;
+  padding: 12px 22px;
+  border-radius: 10px;
+  color: #fff;
+  background: #1c2733;
+  border: 1px solid var(--free);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  display: none;
+  z-index: 1000;
+  font-weight: 600;
+  font-size: 0.92rem;
+  animation: toastPop 180ms ease-out;
+}
+
+#toast.err {
+  border-color: var(--busy);
+}
+
+@keyframes toastPop {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  header {
+    padding: 12px 16px;
+  }
+  main {
+    padding: 16px 12px 40px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  form, .two {
+    grid-template-columns: 1fr;
+  }
+}

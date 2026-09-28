@@ -1,0 +1,21 @@
+{
+  "info": {"name": "TableTurn API", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"},
+  "variable": [{"key": "base", "value": "http://localhost:8080/api"}],
+  "item": [
+    {"name": "1. List tables", "request": {"method": "GET", "url": "{{base}}/tables"}},
+    {"name": "2. Add table", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": "{{base}}/tables", "body": {"mode": "raw", "raw": "{\n  \"tableNumber\": 9,\n  \"capacity\": 4\n}"}}},
+    {"name": "3. Available tables", "request": {"method": "GET", "url": "{{base}}/tables/available?date=2026-09-29&startTime=19:00&partySize=4&durationMinutes=90"}},
+    {"name": "4. Reserve table", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": "{{base}}/reservations", "body": {"mode": "raw", "raw": "{\n  \"tableId\": 3,\n  \"customerName\": \"Arun Kumar\",\n  \"phone\": \"9876543210\",\n  \"partySize\": 4,\n  \"date\": \"2026-09-29\",\n  \"startTime\": \"19:00\",\n  \"durationMinutes\": 90\n}"}}},
+    {"name": "5. Double-booking (expect 409)", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": "{{base}}/reservations", "body": {"mode": "raw", "raw": "{\n  \"tableId\": 3,\n  \"customerName\": \"Priya\",\n  \"phone\": \"9123456780\",\n  \"partySize\": 3,\n  \"date\": \"2026-09-29\",\n  \"startTime\": \"19:30\",\n  \"durationMinutes\": 60\n}"}}},
+    {"name": "6. Invalid input (expect 400)", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": "{{base}}/reservations", "body": {"mode": "raw", "raw": "{\n  \"tableId\": 3,\n  \"customerName\": \"\",\n  \"phone\": \"12\",\n  \"partySize\": -1\n}"}}},
+    {"name": "7. List reservations (paged)", "request": {"method": "GET", "url": "{{base}}/reservations?page=0&size=5&sort=startTime,asc"}},
+    {"name": "8. Seat reservation #1", "request": {"method": "PUT", "url": "{{base}}/reservations/1/seat"}},
+    {"name": "9. Walk-in", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": "{{base}}/tables/walk-in", "body": {"mode": "raw", "raw": "{\n  \"tableId\": 1,\n  \"customerName\": \"Walk-in Guest\",\n  \"partySize\": 2\n}"}}},
+    {"name": "10. Place order", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": "{{base}}/orders", "body": {"mode": "raw", "raw": "{\n  \"tableId\": 3,\n  \"items\": [\n    {\"itemName\": \"Veg Biryani\", \"quantity\": 2, \"unitPrice\": 180},\n    {\"itemName\": \"Butter Naan\", \"quantity\": 4, \"unitPrice\": 40}\n  ]\n}"}}},
+    {"name": "11. Current orders of table", "request": {"method": "GET", "url": "{{base}}/orders/table/3"}},
+    {"name": "12. Generate bill", "request": {"method": "POST", "url": "{{base}}/bills/table/3"}},
+    {"name": "13. Vacate table", "request": {"method": "PUT", "url": "{{base}}/tables/3/vacate"}},
+    {"name": "14. Cancel reservation", "request": {"method": "PUT", "url": "{{base}}/reservations/2/cancel"}},
+    {"name": "15. All bills", "request": {"method": "GET", "url": "{{base}}/bills"}}
+  ]
+}

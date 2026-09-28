@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TableTurn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1>TableTurn<small>Reservations, orders and billing in one place</small></h1>
+  <nav>
+    <button class="on" data-tab="floor">Floor</button>
+    <button data-tab="res">Reservations</button>
+    <button data-tab="ord">Orders &amp; bill</button>
+  </nav>
+</header>
+<main>
+<section id="floor" class="on">
+  <h2>Tables right now</h2>
+  <div id="tables" class="grid"></div>
+</section>
+
+<section id="res" class="stack">
+  <div class="card">
+    <h2>Reserve a table</h2>
+    <form id="resForm">
+      <label>Guest name<input name="customerName" required></label>
+      <label>Phone (digits only)<input name="phone" required pattern="\d{10,15}"></label>
+      <label>Party size<input name="partySize" type="number" min="1" value="2" required></label>
+      <label>Date<input name="date" type="date" required></label>
+      <label>Start time<input name="startTime" type="time" required value="19:00"></label>
+      <label>Duration (minutes)<input name="durationMinutes" type="number" min="30" max="240" step="15" value="90"></label>
+      <label>Table (free for that slot)<select name="tableId" required></select></label>
+      <label>&nbsp;<button class="b" type="submit">Reserve table</button></label>
+    </form>
+  </div>
+  <div class="card">
+    <div class="row" style="margin:0 0 10px;align-items:end">
+      <h2 style="margin:0">Reservations</h2>
+      <label style="margin-left:auto">Filter by date<input id="filterDate" type="date"></label>
+      <button class="b alt" id="clearFilter">Show all</button>
+    </div>
+    <div style="overflow-x:auto"><table class="t"><thead><tr><th>#</th><th>Table</th><th>Guest</th><th>Party</th><th>Date</th><th>Time</th><th>Status</th><th></th></tr></thead><tbody id="resRows"></tbody></table></div>
+    <div class="row"><button class="b alt" id="prev">Previous</button><button class="b alt" id="next">Next</button><span class="muted" id="pageInfo"></span></div>
+  </div>
+</section>
+
+<section id="ord" class="stack">
+  <div class="card">
+    <h2>Take an order</h2>
+    <label style="max-width:320px">Seated table<select id="ordTable"></select></label>
+    <p class="menu" style="margin:14px 0 4px" id="menu"></p>
+    <table class="t"><thead><tr><th>Item</th><th class="r">Qty</th><th class="r">Price</th><th></th></tr></thead><tbody id="cart"></tbody></table>
+    <div class="row"><button class="b" id="placeOrder">Place order</button></div>
+  </div>
+  <div class="card">
+    <div class="row" style="margin:0 0 10px;align-items:center">
+      <h2 style="margin:0">This sitting's orders</h2>
+      <button class="b warn" id="billBtn" style="margin-left:auto">Generate bill</button>
+    </div>
+    <div id="orders" class="muted">Choose a seated table.</div>
+  </div>
+  <div class="card" id="billCard" style="display:none"></div>
+</section>
+</main>
+<div id="toast" role="status"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
